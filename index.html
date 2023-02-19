@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./css/style.css" type="text/css" />
+    <link rel="stylesheet" href="./css/media-querys.css" type="text/css" />
+
+    <title>Loterias</title>
+  </head>
+  <body>
+    <header>
+      <ul>
+        <li>Mega-Sena</li>
+        <li>Lotofácil</li>
+        <li>Lotomania</li>
+        <li>Quina</li>
+        <li>Favoritos</li>
+        <img src="./image/mega.png" alt="Cartelas da Mega-Sena" width="120px" />
+        <span title="Clique aqui para ver o menu" id="btn-menu"
+          ><ion-icon name="menu"></ion-icon
+        ></span>
+        <div class="box-menu">
+          <li>Mega-Sena</li>
+          <li>Lotofácil</li>
+          <li>Lotomania</li>
+          <li>Quina</li>
+          <li>Favoritos</li>
+        </div>
+      </ul>
+    </header>
+
+    <section>
+      <div class="container-favorite">
+        <button onclick="hideFavorites()">
+          <ion-icon name="close-circle-outline"></ion-icon>
+        </button>
+        <div class="favorites-content">
+
+        </div>
+      </div>
+    </section>
+
+    <main>
+      <div class="box-btn">
+        <button id="sort">Sortear</button>
+        <h2>Nº de jogos:<span id="games"></span></h2>
+      </div>
+
+      <div class="container"></div>
+    </main>
+
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"
+    ></script>
+    <script src="./js/script.js"></script>
+  </body>
+</html>

@@ -1,0 +1,364 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Consolas, sans-serif, Arial, Helvetica, sans-serif;
+}
+
+body {
+  position: relative;
+}
+
+header ul {
+  padding: 30px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background-image: linear-gradient(to left, #ffffff, #14c707, #ffffff);
+  box-shadow: 0 0 10px #000;
+}
+
+header ul li {
+  list-style: none;
+  font-size: 1.2rem;
+  padding: 5px 10px;
+  border-radius: 20px;
+  cursor: pointer;
+  color: rgb(255, 255, 255);
+}
+
+header ul li:hover {
+  transform: scale(1.1);
+  color: rgba(0, 0, 0, 0.3);
+}
+
+header ul li:nth-child(1) {
+  background-color: #05db05;
+  font-weight: bold;
+}
+
+header ul li:nth-child(2) {
+  background-color: #a136fe;
+  font-weight: bold;
+}
+
+header ul li:nth-child(3) {
+  background-color: #f48208;
+  font-weight: bold;
+}
+
+header ul li:nth-child(4) {
+  background-color: #f1e604;
+  font-weight: bold;
+}
+
+header ul li:nth-child(5) {
+  background-color: #ff0000;
+  font-weight: bold;
+}
+
+main button#sort {
+  border: none;
+  font-size: 1.5rem;
+  padding: 10px 20px;
+  cursor: pointer;
+  background-color: rgba(0, 0, 0, 0.765);
+  color: white;
+  border-radius: 30px;
+}
+
+main div.container {
+  max-width: 90%;
+  height: 70vh;
+  margin: 0 auto;
+  overflow: auto;
+  box-shadow: inset 0 0 10px #000;
+  border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -o-border-radius: 5px;
+}
+
+main div.box-btn {
+  padding: 20px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+main div.container h1#select-game {
+  font-weight: bold;
+  background-color: #ff000099;
+  text-align: center;
+  padding: 5px 10px;
+  border-radius: 5px;
+  width: 400px;
+  margin: 10px auto;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -o-border-radius: 5px;
+}
+
+main span#games {
+  padding: 5px 10px;
+}
+
+main div.box-content {
+  max-width: 60%;
+  margin: 10px auto;
+  height: auto;
+}
+
+main div.box-content h3 {
+  padding: 10px;
+  text-align: center;
+  letter-spacing: 7px;
+  font-weight: bold;
+}
+
+main div.numbers {
+  border: solid;
+  border-radius: 0 0 5px 5px;
+}
+
+main div.numbers ul {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr) 40px;
+  gap: 5px;
+  text-align: center;
+  padding: 20px;
+}
+
+main div.numbers ul li {
+  list-style: none;
+  border: solid 2px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  font-weight: bold;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+::-webkit-scrollbar {
+  width: 15px;
+}
+
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px #808080;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  border: solid #000 1px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.792);
+}
+
+header span,
+img,
+div.box-menu {
+  display: none;
+}
+
+section div.container-favorite {
+  border: solid;
+  position: absolute;
+  width: 80%;
+  height: 80vh;
+  inset: 0;
+  margin: 20px auto;
+  z-index: 1;
+  background-image: linear-gradient(to bottom, #131313dd, white);
+
+  display: none;
+  overflow: scroll;
+  border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -o-border-radius: 5px;
+}
+
+div.container-favorite button {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+
+div.container-favorite button ion-icon {
+  color: red;
+  font-size: 2rem;
+  font-weight: bold
+}
+
+div.favorites-content div.box-saved-favorites {
+  border: solid;
+  max-width: 650px;
+  margin: 10px auto;
+  border-radius: 6px;
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  -ms-border-radius: 6px;
+  -o-border-radius: 6px;
+}
+
+div.box-saved-favorites div.name-game {
+  display: flex;
+  justify-content: center;
+  border-bottom: solid #000;
+  position: relative;
+}
+
+div.box-saved-favorites div.name-game button#btn-remove-favorite {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+}
+
+div.box-saved-favorites div.name-game button#btn-remove-favorite ion-icon {
+  background-color: #000;
+  border-radius: 50%;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  -o-border-radius: 50%;
+}
+
+div.favorites-content div.box-saved-favorites h3 {
+  letter-spacing: 7px;
+  padding: 15px;
+  text-align: center;
+}
+
+div.favorites-content div.box-saved-favorites ul.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr) 90px !important;
+}
+
+div.favorites-content div.box-saved-favorites ul {
+  display: grid; 
+  grid-template-columns: repeat(6, 1fr);
+  place-items: center;
+  padding: 20px;
+  background-color: #ffffff; 
+}
+
+div.favorites-content h3#empty-favorite {
+  text-align: center;
+  color: white;
+  font-size: 2rem;
+}
+
+div.favorites-content div.box-saved-favorites ul li {
+  list-style: none;
+  border: solid #000 2px;
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  margin: 5px 2px;
+  justify-content: center;
+  font-weight: bold;
+  border-radius: 50%;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  -o-border-radius: 50%;
+}
+
+main div.box-favorite {
+  border-top: solid #000;
+  border-left: solid #000;
+  border-right: solid #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+main div.box-favorite span {
+  position: absolute;
+  top: 5px;
+  right: 30px;
+}
+
+main div.box-favorite span ion-icon {
+  position: absolute;
+  cursor: pointer;
+}
+
+main div.box-favorite span ion-icon:nth-child(1) {
+  color: #000;
+  font-size: 1.7rem;
+}
+
+main div.box-favorite span ion-icon:nth-child(2) {
+  color: white;
+  font-size: 1.5rem;
+  right: -25.249px;
+  top: 1px;
+}
+
+.mega {
+  background-color: #05db05;
+  border-radius: 5px 5px 0 0;
+  -webkit-border-radius: 5px 5px 0 0;
+  -moz-border-radius: 5px 5px 0 0;
+  -ms-border-radius: 5px 5px 0 0;
+  -o-border-radius: 5px 5px 0 0;
+}
+.loto {
+  background-color: #a136fe;
+  border-radius: 5px 5px 0 0;
+}
+.mania {
+  background-color: #f48208;
+  border-radius: 5px 5px 0 0;
+}
+.quina {
+  background-color: #f1e604;
+  border-radius: 5px 5px 0 0;
+}
+
+.checked {
+  background: #6cff62;
+}
+
+.show-favorites {
+  animation: show-favorite 1s linear reverse;
+  -webkit-animation: show-favorite 1s linear reverse;
+}
+
+.hide-favorites {
+  animation: hide-favorite linear 1s reverse;
+  -webkit-animation: hide-favorite linear 1s reverse;
+}
+
+@keyframes show-favorite {
+  to {
+    transform: scale(0);
+    -webkit-transform: scale(0);
+    -moz-transform: scale(0);
+    -ms-transform: scale(0);
+    -o-transform: scale(0);
+  }
+}
+
+@keyframes hide-favorite {
+  from {
+    transform: scale(0);
+    -webkit-transform: scale(0);
+    -moz-transform: scale(0);
+    -ms-transform: scale(0);
+    -o-transform: scale(0);
+  }
+}
