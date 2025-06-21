@@ -1,4 +1,4 @@
-const btnHeader = document.querySelectorAll("header ul li");
+const btnHeader = document.querySelectorAll(".offcanvas-body .navbar-nav > li > a");
 const divContainer = document.querySelector("div.container");
 const divContent = document.querySelector("div.container > div");
 const btnSort = document.querySelector("button#sort");
