@@ -1,0 +1,16 @@
+{
+  "name": "Gerador de Jogos - Loterias",
+  "short_name": "Loterias",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#4CAF50",
+  "description": "Gere jogos para Mega-Sena, Quina, Lotofácil e Lotomania.",
+  "icons": [
+    {
+      "src": "image/clover-solid.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    }
+  ]
+}
