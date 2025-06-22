@@ -15,28 +15,28 @@
     <nav class="navbar bg-light">
       <div class="p-2 d-flex justify-content-around" style="width: 100%;">
         <button 
-          class="btn btn-sm btn-sortable btn-outline-secondary active" 
+          class="btn btn-sm btn-sortable btn-outline-dark active" 
           type="button"
           data-game="megasena"
           >
           Mega-Sena
         </button>
         <button 
-          class="btn btn-sm btn-sortable btn-outline-secondary" 
+          class="btn btn-sm btn-sortable btn-outline-dark" 
           type="button"
           data-game="lotofacil"
           >
           Lotofácil
         </button>
         <button 
-          class="btn btn-sm btn-sortable btn-outline-secondary" 
+          class="btn btn-sm btn-sortable btn-outline-dark" 
           type="button"
           data-game="lotomania"
           >
           Lotomania
         </button>
         <button 
-          class="btn btn-sm btn-sortable btn-outline-secondary" 
+          class="btn btn-sm btn-sortable btn-outline-dark" 
           type="button"
           data-game="quina"
           >
@@ -74,9 +74,8 @@
                 <div class="card-text">
                   <div class="row">
                     <div class="col-12 info-result"></div>
-                    <div class="col-12 my-3">
-                      <div class="row numbers-result">
-                      </div>
+                    <div class="col-12 my-3 p-2 border border-secondary rounded-3">
+                      <div class="row numbers-result"></div>
                     </div>
                     <div class="col-12 accumulator-result"></div>
                   </div>
@@ -85,37 +84,53 @@
             </div>
           </div>
         </div>
-        <div class="row">
-          <div class="col">
-            <button id="btn-sortable" class="btn btn-primary">
+        <div class="row align-items-center">
+          <div class="col-6">
+            <div class="row">
+              <div class="col-9">
+                <div class="form-floating mb-3">
+                  <input 
+                    type="text" 
+                    name="number-hits"
+                    class="form-control" 
+                    id="floatingInput" 
+                    placeholder=""
+                    maxlength="2"
+                  >
+                  <label for="floatingInput">Acertos</label>
+                </div>
+              </div>
+              <div class="col-3 m-0 p-0 justify-content-start">
+                <button
+                  type="button"
+                  class="border-0 bg-transparent btn-tooltip"
+                  data-bs-toggle="tooltip" 
+                  data-bs-placement="right"
+                  data-bs-custom-class="custom-tooltip"
+                  data-bs-title="Número de acertos que deseja gerar para o jogo selecionado. Mega-Sena: 6, Lotofácil: 15, Lotomania: 20, Quina: 5."
+                >
+                  <i 
+                    class="fa-solid fa-circle-question fa-xl text-primary"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="col-6 text-end">
+            <button id="btn-generate-numbers" class="btn btn-primary">
               Gerar Jogos
+              <i class="fa-solid fa-arrows-rotate"></i>
             </button>
           </div>
-          <div class="col text-end">
-            <h3>Total:
-              <span id="total-games">0</span>
-            </h3>
-          </div>
         </div>
-        <div class="row div-content-numbers" style="display: none;">
+        <div class="row div-content-numbers border border-secondary my-2 rounded-3" style="display: none;">
           <div class="col-12">
             <div class="d-flex flex-wrap justify-content-center">
               <div class="card m-2" style="width: 25rem;">
                 <div class="card-title">
-                  <h5 class="text-title text-center py-2 rounded-top">
-                    Jogo 1
-                  </h5>
+                  <h5 class="text-title text-center py-2 rounded-top"></h5>
                 </div>
                 <div class="card-body">
-                  <div class="card-body div-template">
-                    <div class="row">
-                      <div class="col border border-danger text-center mx-2 rounded-circle py-3">1</div>
-                      <div class="col border border-danger text-center mx-2 rounded-circle py-3">1</div>
-                      <div class="col border border-danger text-center mx-2 rounded-circle py-3">1</div>
-                      <div class="col border border-danger text-center mx-2 rounded-circle py-3">1</div>
-                      <div class="col border border-danger text-center mx-2 rounded-circle py-3">1</div>
-                    </div>
-                  </div>
+                  <div class="card-body div-template"></div>
                 </div>
               </div>
           </div>
@@ -124,6 +139,11 @@
     </main>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js" integrity="sha512-pHVGpX7F/27yZ0ISY+VVjyULApbDlD0/X0rgGbTqCE7WFW5MezNTWG/dnhtbBuICzsd0WQPgpE4REBLv+UqChw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script crossorigin="anonymous" referrerpolicy="no-referrer">
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    </script>
     <script src="./js/script.js"></script>
   </body>
 </html>
