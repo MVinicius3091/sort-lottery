@@ -1,6 +1,7 @@
 $(document).ready(function () {
-  var NAME_GAME = "Mega-Sena";
+  let NAME_GAME = "Mega-Sena";
   let CONCURSO = "megasena";
+  let FAVORITES = [];
 
   const COLORS = {
     megasena: "#4CAF50",
@@ -34,6 +35,82 @@ $(document).ready(function () {
   const btnMenuSortable = $(".btn-sortable");
   btnMenuSortable.each(function () {
     getLastResults($(this).data("game"), (data) => data);
+  });
+
+  //FAVORITES
+  if (localStorage.getItem("favorites")) {
+    FAVORITES = JSON.parse(localStorage.getItem("favorites"));
+  }
+
+  let divContentFavorites = $(".div-content-favorites");
+  $(".btn-favorite").click(function () {
+    let gameSizeName = {
+      5: {
+        title: "Quina",
+        repeat: "5",
+        color: "#2196F3",
+      },
+      6: {
+        title: "Mega-Sena",
+        repeat: "6",
+        color: "#4CAF50",
+      },
+      15: {
+        title: "Lotofácil",
+        repeat: "5",
+        color: "#9C27B0",
+      },
+      20: {
+        title: "Lotomania",
+        repeat: "5",
+        color: "#FF9800",
+      },
+    };
+
+    divContentNumbers.hide("50");
+
+    sleep(800).then(() => {
+      FAVORITES.forEach(function (favorite) {
+        divContentFavorites.append(`
+          <div class="col-12">
+            <div class="d-flex flex-wrap justify-content-center">
+              <div class="card m-2" style="width: 25rem;">
+                <div class="card-title">
+                  <h5 class="text-title text-center py-2 rounded-top" style="border: solid 1px ${
+                    gameSizeName[favorite.length].color
+                  }; color: ${gameSizeName[favorite.length].color};">
+                    ${gameSizeName[favorite.length].title}
+                    <span class="float-end px-2" id="add-favorite">
+                      <i class="fa-solid fa-heart" style="color: #ea0016;"></i>
+                    </span>
+                  </h5>
+                </div>
+                <div class="card-body">
+                  <div 
+                    class="card-body" 
+                    style="display: grid; gap: 10px; grid-template-columns: repeat(${
+                      gameSizeName[favorite.length].repeat
+                    }, 1fr); place-items: center;">
+                    ${favorite
+                      .map(
+                        (number) =>
+                          `<div
+                            class="col rounded-circle btn-number-sortable"
+                            style="border: solid 1px ${
+                              gameSizeName[favorite.length].color
+                            }; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;"
+                          >
+                            ${number}
+                          </div>`
+                      )
+                      .join("")}
+                  </div>
+                </div>
+              </div>
+          </div>
+        `);
+      });
+    });
   });
 
   // API RESULTS
@@ -81,6 +158,21 @@ $(document).ready(function () {
         <p>Próximo sorteio: <strong>${data.dataProximoConcurso}</strong></p>
         <p>Acumulou: <strong>${data.acumulou ? "Sim" : "Não"}</strong></p>
       `);
+
+      if (data.localGanhadores.length > 0) {
+        data.localGanhadores.forEach((ganhador) => {
+          infoResult.append(`
+            <div class="card my-2">
+              <div class="card-body">
+                <p>Ganhadores: <strong>${ganhador.ganhadores}</strong></p>
+                <p>Cidade: <strong>${ganhador.municipio}</strong></p>
+                <p>UF: <strong>${ganhador.uf}</strong></p>
+              </div>
+            </div>
+          `);
+        });
+      }
+
       numberResult.html("");
       numberResult.css({
         display: "grid",
@@ -124,11 +216,20 @@ $(document).ready(function () {
       justifyItems: "center",
     });
 
+    divContentFavorites.empty();
     $(this).children().addClass("fa-spin");
     sleep(800).then(() => {
       divContentNumbers.show("50");
       divTitle.text(NAME_GAME);
-      divTitle.css("color", COLORS[CONCURSO]);
+      divTitle.css({
+        color: COLORS[CONCURSO],
+        border: "solid 1px" + COLORS[CONCURSO],
+      });
+      divTitle.append(`
+        <span class="float-end px-2" id="add-favorite">
+          <i class="fa-solid fa-heart" style="color: #000000;"></i>
+        </span>
+      `);
 
       const numbersSoutable = randomNumbers(
         SIZE_GAMES[CONCURSO],
@@ -136,8 +237,8 @@ $(document).ready(function () {
         CONCURSO,
         numberHits.val()
       );
-      divTemplate.empty();
 
+      divTemplate.empty();
       numbersSoutable.forEach(function (number) {
         divTemplate.append(`
           <div
@@ -150,10 +251,27 @@ $(document).ready(function () {
 
       $(this).children().removeClass("fa-spin");
       $(".btn-number-sortable").click(function () {
-        $(this).css({
-          color: "#ffffff",
-          backgroundColor: COLORS[CONCURSO],
-        });
+        const isSelected = $(this).hasClass("selected");
+        if (isSelected) {
+          $(this).removeClass("selected");
+          $(this).css({
+            color: "",
+            backgroundColor: "",
+          });
+        } else {
+          $(this).addClass("selected");
+          $(this).css({
+            color: "#ffffff",
+            backgroundColor: COLORS[CONCURSO],
+          });
+        }
+      });
+
+      $("#add-favorite").click(function () {
+        $(this).children().css("color", "#ea0016");
+        FAVORITES.push(numbersSoutable);
+        localStorage.setItem("favorites", JSON.stringify(FAVORITES));
+        showAlert("Adicionado aos favoritos").time(2500);
       });
     });
   });
@@ -217,4 +335,36 @@ function formatMoney(value) {
 
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function showAlert(message, type = "success") {
+  let icon = {
+    success: {
+      name: "check",
+      color: "#13a300",
+    },
+    danger: {
+      name: "exclamation",
+      color: "#b10202",
+    },
+    warning: {
+      name: "triangle-exclamation",
+      color: "#c5c203",
+    },
+  };
+
+  $("body").append(`
+    <div class="alert alert-${type} d-flex align-items-center position-fixed top-0 w-100" role="alert">
+      <i class="fa-solid fa-${icon[type].name}" style="color: ${icon[type].color};"></i>
+      <div class="mx-2">
+        ${message}
+      </div>
+    </div>
+  `);
+
+  return {
+    time(duration) {
+      return setTimeout(() => $(".alert").remove(), duration);
+    },
+  };
 }

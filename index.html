@@ -51,7 +51,7 @@
               Gerador de Jogos - Loterias
             </h2>
       <div class="container-numbers p-1">
-        <div class="row mb-4 pt-3 border border-secondary rounded-3">
+        <div class="row mb-4 pt-3 border rounded-3">
           <div class="col-6">
             <div class="form-floating mb-3">
               <input type="text" readonly name="name-game" class="form-control" id="floatingInput" placeholder="">
@@ -68,6 +68,12 @@
             <button class="btn btn-primary btn-view-result" type="button">
               Ver Resultado
             </button>
+            <button class="btn btn-warning btn-aggregate-numbers" type="button">
+              Mais Sorteados  
+            </button>
+            <button class="btn btn-info btn-favorite" type="button">
+              Favoritos  
+            </button>
           </div>
           <div class="col-12 my-1 content-result" style="display: none;">
             <div class="card">
@@ -75,7 +81,7 @@
                 <div class="card-text">
                   <div class="row">
                     <div class="col-12 info-result"></div>
-                    <div class="col-12 my-3 p-2 border border-secondary rounded-3">
+                    <div class="col-12 my-3 p-2 border rounded-3">
                       <div class="row numbers-result"></div>
                     </div>
                     <div class="col-12 accumulator-result"></div>
@@ -123,7 +129,8 @@
             </button>
           </div>
         </div>
-        <div class="row div-content-numbers border border-secondary my-2 rounded-3" style="display: none;">
+        <div class="row border my-2 rounded-3 div-content-favorites"></div>
+        <div class="row div-content-numbers border my-2 rounded-3" style="display: none;">
           <div class="col-12">
             <div class="d-flex flex-wrap justify-content-center">
               <div class="card m-2" style="width: 25rem;">
