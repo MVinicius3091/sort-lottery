@@ -38,7 +38,7 @@ $(document).ready(function () {
   });
 
   $(".btn-favorite").click(function () {
-    //FAVORITES
+    FAVORITES = [];
     if (localStorage.getItem("favorites")) {
       FAVORITES = JSON.parse(localStorage.getItem("favorites"));
     }
