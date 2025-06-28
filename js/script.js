@@ -37,80 +37,12 @@ $(document).ready(function () {
     getLastResults($(this).data("game"), (data) => data);
   });
 
-  //FAVORITES
-  if (localStorage.getItem("favorites")) {
-    FAVORITES = JSON.parse(localStorage.getItem("favorites"));
-  }
-
-  let divContentFavorites = $(".div-content-favorites");
   $(".btn-favorite").click(function () {
-    let gameSizeName = {
-      5: {
-        title: "Quina",
-        repeat: "5",
-        color: "#2196F3",
-      },
-      6: {
-        title: "Mega-Sena",
-        repeat: "6",
-        color: "#4CAF50",
-      },
-      15: {
-        title: "Lotofácil",
-        repeat: "5",
-        color: "#9C27B0",
-      },
-      20: {
-        title: "Lotomania",
-        repeat: "5",
-        color: "#FF9800",
-      },
-    };
-
-    divContentNumbers.hide("50");
-
-    sleep(800).then(() => {
-      FAVORITES.forEach(function (favorite) {
-        divContentFavorites.append(`
-          <div class="col-12">
-            <div class="d-flex flex-wrap justify-content-center">
-              <div class="card m-2" style="width: 25rem;">
-                <div class="card-title">
-                  <h5 class="text-title text-center py-2 rounded-top" style="border: solid 1px ${
-                    gameSizeName[favorite.length].color
-                  }; color: ${gameSizeName[favorite.length].color};">
-                    ${gameSizeName[favorite.length].title}
-                    <span class="float-end px-2" id="add-favorite">
-                      <i class="fa-solid fa-heart" style="color: #ea0016;"></i>
-                    </span>
-                  </h5>
-                </div>
-                <div class="card-body">
-                  <div 
-                    class="card-body" 
-                    style="display: grid; gap: 10px; grid-template-columns: repeat(${
-                      gameSizeName[favorite.length].repeat
-                    }, 1fr); place-items: center;">
-                    ${favorite
-                      .map(
-                        (number) =>
-                          `<div
-                            class="col rounded-circle btn-number-sortable"
-                            style="border: solid 1px ${
-                              gameSizeName[favorite.length].color
-                            }; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;"
-                          >
-                            ${number}
-                          </div>`
-                      )
-                      .join("")}
-                  </div>
-                </div>
-              </div>
-          </div>
-        `);
-      });
-    });
+    //FAVORITES
+    if (localStorage.getItem("favorites")) {
+      FAVORITES = JSON.parse(localStorage.getItem("favorites"));
+    }
+    renderFavorites(FAVORITES);
   });
 
   // API RESULTS
@@ -216,7 +148,7 @@ $(document).ready(function () {
       justifyItems: "center",
     });
 
-    divContentFavorites.empty();
+    $(".div-content-favorites").empty().hide();
     $(this).children().addClass("fa-spin");
     sleep(800).then(() => {
       divContentNumbers.show("50");
@@ -268,10 +200,19 @@ $(document).ready(function () {
       });
 
       $("#add-favorite").click(function () {
-        $(this).children().css("color", "#ea0016");
-        FAVORITES.push(numbersSoutable);
-        localStorage.setItem("favorites", JSON.stringify(FAVORITES));
-        showAlert("Adicionado aos favoritos").time(2500);
+        const isFavorite = $(this).children().hasClass("favorite");
+
+        if (isFavorite) {
+          showAlert("O jogo já foi adicionado aos favoritos!", "warning").time(
+            2500
+          );
+        } else {
+          $(this).children().addClass("favorite");
+          $(this).children().css("color", "#ea0016");
+          FAVORITES.push(numbersSoutable);
+          localStorage.setItem("favorites", JSON.stringify(FAVORITES));
+          showAlert("Adicionado aos favoritos").time(2500);
+        }
       });
     });
   });
@@ -299,6 +240,91 @@ function getLastResults(concurso, callback) {
       localStorage.setItem(`${concurso}`, JSON.stringify(response));
     },
   });
+}
+
+function renderFavorites(dataFavorites) {
+  let gameSizeName = {
+    5: {
+      title: "Quina",
+      repeat: "5",
+      color: "#2196F3",
+    },
+    6: {
+      title: "Mega-Sena",
+      repeat: "6",
+      color: "#4CAF50",
+    },
+    15: {
+      title: "Lotofácil",
+      repeat: "5",
+      color: "#9C27B0",
+    },
+    20: {
+      title: "Lotomania",
+      repeat: "5",
+      color: "#FF9800",
+    },
+  };
+
+  let divContentFavorites = $(".div-content-favorites");
+  divContentFavorites.show("50");
+  $(".div-content-numbers").hide("50");
+
+  sleep(0).then(() => {
+    dataFavorites.forEach((favorite, index) => {
+      divContentFavorites.append(`
+          <div class="col-12">
+            <div class="d-flex flex-wrap justify-content-center">
+              <div class="card m-2" style="width: 25rem;">
+                <div class="card-title">
+                  <h5 class="text-title text-center py-2 rounded-top" style="border: solid 1px ${
+                    gameSizeName[favorite.length].color
+                  }; color: ${gameSizeName[favorite.length].color};">
+                    ${gameSizeName[favorite.length].title}
+                    <span class="float-end px-2 remove-favorite" data-id="${index}">
+                      <i class="fa-solid fa-heart" style="color: #ea0016;"></i>
+                    </span>
+                  </h5>
+                </div>
+                <div class="card-body">
+                  <div 
+                    class="card-body" 
+                    style="display: grid; gap: 10px; grid-template-columns: repeat(${
+                      gameSizeName[favorite.length].repeat
+                    }, 1fr); place-items: center;">
+                    ${favorite
+                      .map(
+                        (number) =>
+                          `<div
+                            class="col rounded-circle btn-number-sortable"
+                            style="border: solid 1px ${
+                              gameSizeName[favorite.length].color
+                            }; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;"
+                          >
+                            ${number}
+                          </div>`
+                      )
+                      .join("")}
+                  </div>
+                </div>
+              </div>
+          </div>
+        `);
+    });
+
+    $(".remove-favorite").click(function () {
+      divContentFavorites.empty();
+      const index = $(this).data("id");
+      dataFavorites = dataFavorites.filter((_, idx) => idx !== index);
+      removeFavorites(dataFavorites);
+    });
+  });
+}
+
+function removeFavorites(dataFavorites) {
+  renderFavorites(dataFavorites);
+  localStorage.setItem("favorites", JSON.stringify(dataFavorites));
+  showAlert("Removido dos favoritos com sucesso!", "success").time(2500);
 }
 
 function randomNumbers(size_game, match_hits, consurso, number_hits) {
