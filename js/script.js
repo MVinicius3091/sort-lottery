@@ -31,6 +31,13 @@ $(document).ready(function () {
     }
   });
 
+  const numberAggregate = $('input[name="number-aggregate"]');
+  numberAggregate.mask("0000").on("keyup", function () {
+    if ($(this).val() > 1000) {
+      $(this).val(1000);
+    }
+  });
+
   // HEADERS BUTTONS
   const btnMenuSortable = $(".btn-sortable");
   btnMenuSortable.each(function () {
@@ -53,7 +60,87 @@ $(document).ready(function () {
   let numberResult = $(".numbers-result");
   let accumulatorResult = $(".accumulator-result");
   let btnViewResult = $(".btn-view-result");
+  let btnCloseResult = $(".btn-close-results");
   inputGame.val(NAME_GAME);
+
+  btnCloseResult.click(function () {
+    divResult.hide("50");
+  });
+
+  $(".btn-aggregate-numbers").click(function () {
+    $(this).attr("disabled", true);
+    $(this).children().addClass("fa-spin");
+    sleep(800).then(() => {
+      getAllResults(CONCURSO, function (data) {
+        let results = data;
+        let numberAggregateValue =
+          parseInt(numberAggregate.val()) > 0
+            ? parseInt(numberAggregate.val())
+            : 100;
+
+        let limit =
+          results.length > numberAggregateValue
+            ? numberAggregateValue
+            : results.length;
+
+        results = results.slice(1, limit + 1);
+
+        const sizeGames = Array.from(
+          { length: SIZE_GAMES[CONCURSO] },
+          (_, i) => i + 1
+        );
+
+        const contagem = new Map();
+
+        sizeGames.forEach((number) => {
+          results.forEach((result) => {
+            let setNumber = number < 10 ? `0${number}` : String(number);
+
+            if (result.dezenas.includes(setNumber)) {
+              contagem.set(number, (contagem.get(number) || 0) + 1);
+            }
+          });
+        });
+
+        $(".div-before-aggregate-numbers").empty();
+        $(".div-content-aggregate-numbers").empty();
+        $(".div-content-aggregate-numbers").before(`
+          <div class="col-12 div-before-aggregate-numbers">
+            <h5 class="text-title text-center py-2 rounded-top" style="border: solid 1px ${COLORS[CONCURSO]}; color: ${COLORS[CONCURSO]};">
+              Números Sorteados - <span class="text-uppercase">${NAME_GAME}</span>
+              <p>Total de sorteios: <strong>${results.length}</strong></p>
+            </h5>
+          </div>  
+        `);
+
+        contagem.forEach((value, key) => {
+          $(".div-content-aggregate-numbers").append(`
+            <div class="col">
+              <div class="card my-2">
+                <div class="card-body">
+                  <p class="d-flex align-items-center justify-content-center">
+                    <span 
+                      class="rounded-circle"
+                      style="border: solid 1px ${COLORS[CONCURSO]}; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; color: ${COLORS[CONCURSO]};"
+                    >${key}</span>
+                    <span class="mx-2">Sorteado:</span>
+                    <span>${value}x</span>
+                  </p>
+                </div>
+              </div>
+            </div>  
+          `);
+        });
+
+        $(".btn-aggregate-numbers").attr("disabled", false);
+        $(".btn-aggregate-numbers").children().removeClass("fa-spin");
+
+        $(".div-content-aggregate-numbers").show("50");
+        $(".div-content-favorites").hide("50");
+        $(".div-content-numbers").hide("50");
+      });
+    });
+  });
 
   // GAMES
   const btnGenerateSortable = $("#btn-generate-numbers");
@@ -149,6 +236,9 @@ $(document).ready(function () {
     });
 
     $(".div-content-favorites").empty().hide();
+    $(".div-before-aggregate-numbers").empty().hide();
+    $(".div-content-aggregate-numbers").empty().hide();
+    $(this).attr("disabled", true);
     $(this).children().addClass("fa-spin");
     sleep(800).then(() => {
       divContentNumbers.show("50");
@@ -163,7 +253,7 @@ $(document).ready(function () {
         </span>
       `);
 
-      const numbersSoutable = randomNumbers(
+      const numberSortable = randomNumbers(
         SIZE_GAMES[CONCURSO],
         HITS[CONCURSO],
         CONCURSO,
@@ -171,7 +261,7 @@ $(document).ready(function () {
       );
 
       divTemplate.empty();
-      numbersSoutable.forEach(function (number) {
+      numberSortable.forEach(function (number) {
         divTemplate.append(`
           <div
             class="col rounded-circle btn-number-sortable"
@@ -181,6 +271,7 @@ $(document).ready(function () {
         `);
       });
 
+      $(this).attr("disabled", false);
       $(this).children().removeClass("fa-spin");
       $(".btn-number-sortable").click(function () {
         const isSelected = $(this).hasClass("selected");
@@ -209,7 +300,7 @@ $(document).ready(function () {
         } else {
           $(this).children().addClass("favorite");
           $(this).children().css("color", "#ea0016");
-          FAVORITES.push(numbersSoutable);
+          FAVORITES.push(numberSortable);
           localStorage.setItem("favorites", JSON.stringify(FAVORITES));
           showAlert("Adicionado aos favoritos").time(2500);
         }
@@ -238,6 +329,35 @@ function getLastResults(concurso, callback) {
       callback(response);
       response.dataAtual = new Date().toLocaleDateString();
       localStorage.setItem(`${concurso}`, JSON.stringify(response));
+    },
+  });
+}
+
+function getAllResults(concurso, callback) {
+  if (localStorage.getItem(`${concurso}_all`)) {
+    const cachedData = JSON.parse(localStorage.getItem(`${concurso}_all`));
+    if (cachedData[0].dataAtual == new Date().toLocaleDateString()) {
+      callback(cachedData);
+      return;
+    }
+  }
+
+  $.ajax({
+    url: `https://loteriascaixa-api.herokuapp.com/api/${concurso}`,
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    dataType: "json",
+    success: function (response) {
+      let restuls = [{ dataAtual: new Date().toLocaleDateString() }];
+      response.forEach((item) => {
+        restuls.push({
+          dezenas: item.dezenas,
+        });
+      });
+      callback(restuls);
+      localStorage.setItem(`${concurso}_all`, JSON.stringify(restuls));
     },
   });
 }
