@@ -212,7 +212,7 @@ $(document).ready(function () {
 
       accumulatorResult.html(`
         <p>Valor acumulado do concurso: <strong>${formatMoney(
-          data.valorAcumuladoProximoConcurso
+          data.valorAcumuladoConcurso_0_5
         )}</strong></p>
         <p>Valor acumulado para o próximo concurso: <strong>${formatMoney(
           data.valorAcumuladoProximoConcurso
