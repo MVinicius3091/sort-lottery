@@ -138,6 +138,11 @@ $(document).ready(function () {
         $(".div-content-aggregate-numbers").show("50");
         $(".div-content-favorites").hide("50");
         $(".div-content-numbers").hide("50");
+
+        scrollTo({
+          top: $(".div-before-aggregate-numbers").offset().top + 5,
+          behavior: "smooth",
+        });
       });
     });
   });
@@ -200,6 +205,7 @@ $(document).ready(function () {
         alignItems: "center",
         justifyItems: "center",
       });
+
       data.dezenas.forEach(function (number) {
         numberResult.append(`
           <div 
@@ -241,12 +247,16 @@ $(document).ready(function () {
     $(this).attr("disabled", true);
     $(this).children().addClass("fa-spin");
     sleep(800).then(() => {
+      $(".div-content-check-numbers").remove();
       divContentNumbers.show("50");
+      divTemplate.empty();
+
       divTitle.text(NAME_GAME);
       divTitle.css({
         color: COLORS[CONCURSO],
         border: "solid 1px" + COLORS[CONCURSO],
       });
+
       divTitle.append(`
         <span class="float-end px-2" id="add-favorite">
           <i class="fa-solid fa-heart" style="color: #000000;"></i>
@@ -260,16 +270,27 @@ $(document).ready(function () {
         numberHits.val()
       );
 
-      divTemplate.empty();
       numberSortable.forEach(function (number) {
         divTemplate.append(`
           <div
             class="col rounded-circle btn-number-sortable"
-            style="border: solid 1px ${COLORS[CONCURSO]}; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">
-            ${number}
+            style="border: solid 1px ${
+              COLORS[CONCURSO]
+            }; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">
+            ${number < 10 ? "0" + number : number}
           </div>
         `);
       });
+
+      divContentNumbers.append(`
+        <div class="w-100 text-center py-2 div-content-check-numbers">
+          <button class="btn btn-success btn-check-numbers">
+            Conferir
+            <i class="fa-solid fa-arrows-rotate"></i>
+          </button>
+          <button type="button" class="btn btn-outline-info total-check-result d-none">0</button>
+        </div>
+      `);
 
       $(this).attr("disabled", false);
       $(this).children().removeClass("fa-spin");
@@ -304,6 +325,49 @@ $(document).ready(function () {
           localStorage.setItem("favorites", JSON.stringify(FAVORITES));
           showAlert("Adicionado aos favoritos").time(2500);
         }
+      });
+
+      $(".btn-check-numbers").click(function () {
+        let resultNumbers = [];
+        let emptyNumbers = true;
+        let totals = 0;
+
+        $(this).children().addClass("fa-spin");
+
+        sleep(800).then(() => {
+          getLastResults(CONCURSO, (data) => (resultNumbers = data.dezenas));
+
+          $(".btn-number-sortable").each(function () {
+            let number = $(this).text().trim();
+
+            if (resultNumbers.includes(number)) {
+              $(this).addClass("selected");
+              $(this).css({
+                color: "#ffffff",
+                backgroundColor: COLORS[CONCURSO],
+              });
+              emptyNumbers = false;
+              totals++;
+            }
+          });
+
+          if (emptyNumbers) {
+            showAlert("Nenhum número foi sorteado!", "warning").time(2500);
+          }
+
+          if (totals > 0) {
+            $(".total-check-result")
+              .removeClass("d-none")
+              .text(`${totals} Acertos`);
+          }
+
+          $(this).children().removeClass("fa-spin");
+        });
+      });
+
+      scrollTo({
+        top: document.body.scrollHeight,
+        behavior: "smooth",
       });
     });
   });
@@ -389,6 +453,8 @@ function renderFavorites(dataFavorites) {
   let divContentFavorites = $(".div-content-favorites");
   divContentFavorites.show("50");
   $(".div-content-numbers").hide("50");
+  $(".div-before-aggregate-numbers").empty().hide("50");
+  $(".div-content-aggregate-numbers").empty().hide("50");
 
   sleep(0).then(() => {
     dataFavorites.forEach((favorite, index) => {
